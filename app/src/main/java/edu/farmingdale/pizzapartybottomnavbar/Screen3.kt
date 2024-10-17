@@ -43,7 +43,7 @@ fun Screen3() {
         Slider(value = sliderValue, onValueChange = { sliderValue=it }, Modifier.fillMaxWidth()
             , enabled = chkd)
 
-        Text (fontSize = 20.sp, text = "Second Screen" )
+        Text (fontSize = 20.sp, text = "Second Screen" + sliderValue)
 
         Button(onClick = { val newInt = Intent(Intent.ACTION_VIEW)
             newInt.setData(Uri.parse("tel:6314202000"))
