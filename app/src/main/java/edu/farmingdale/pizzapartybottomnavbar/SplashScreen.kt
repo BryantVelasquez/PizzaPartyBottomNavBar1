@@ -39,7 +39,7 @@ fun SplashScreen(navController: NavHostController) {
         navController.navigate(BottomNavigationItems.PizzaScreen.route)
     }
 
-    Column (modifier = Modifier
+    Column (modifier = Modifier.fillMaxSize()
         .wrapContentSize(Alignment.Center)){
         Image(painter = painterResource(id = R.drawable.fsclogo), contentDescription ="" )
     }
