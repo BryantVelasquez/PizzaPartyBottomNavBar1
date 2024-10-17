@@ -26,7 +26,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-// ToDo 2: the slider should be able to change the text value of the screen
 
 // ToDo 3: Make the UI look better by adding a gradient background (vertical) and padding
 
@@ -37,7 +36,9 @@ fun Screen3() {
 
 
     val context = LocalContext.current
-    Column ( modifier = Modifier.padding(horizontal = 20.dp).fillMaxSize(),
+    val brushColor = arrayOf(0.0f to Color.White, 0.2f to Color.LightGray, 1f to Color.White)
+
+    Column ( modifier = Modifier.padding(horizontal = 20.dp).fillMaxSize().background(Brush.verticalGradient(colorStops = brushColor)),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally){
         Slider(value = sliderValue, onValueChange = { sliderValue=it }, Modifier.fillMaxWidth()
