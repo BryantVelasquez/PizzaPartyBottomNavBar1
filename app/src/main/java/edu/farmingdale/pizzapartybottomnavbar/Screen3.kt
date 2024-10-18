@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 
-// ToDo 3: Make the UI look better by adding a gradient background (vertical) and padding
+
 
 @Composable
 fun Screen3() {

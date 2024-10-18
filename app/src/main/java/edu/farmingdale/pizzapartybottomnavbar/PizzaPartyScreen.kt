@@ -2,10 +2,8 @@ package edu.farmingdale.pizzapartybottomnavbar
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
@@ -14,33 +12,22 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import kotlin.math.ceil
-
-// ToDo 6: Add another level of hunger that is Hungry that is in between Medium and Very hungry
-
-// ToDo 7: Using the ViewModel class, create a new ViewModel class called PizzaPartyViewModel as
-// a subclass of ViewModel. Add the following properties to the PizzaPartyViewModel - see Brightspace
+import androidx.lifecycle.ViewModel
 
 @Composable
-fun PizzaPartyScreen( modifier: Modifier = Modifier) {
-    var totalPizzas by remember { mutableIntStateOf(0) }
-    var numPeopleInput by remember { mutableStateOf("") }
-    var hungerLevel by remember { mutableStateOf("Medium") }
+fun PizzaPartyScreen(modifier: Modifier = Modifier) {
+    val viewModel: PizzaPartyViewModel = remember { PizzaPartyViewModel() }
 
-    Column(
-        modifier = modifier.padding(10.dp)
-    ) {
+    Column(modifier = modifier.padding(10.dp)) {
         Text(
             text = "Pizza Party",
             fontSize = 38.sp,
@@ -48,32 +35,32 @@ fun PizzaPartyScreen( modifier: Modifier = Modifier) {
         )
         NumberField(
             labelText = "Number of people?",
-            textInput = numPeopleInput,
-            onValueChange = { numPeopleInput = it },
+            textInput = viewModel.numPeopleInput,
+            onValueChange = { viewModel.numPeopleInput = it },
             modifier = modifier.padding(bottom = 16.dp).fillMaxWidth()
         )
         RadioGroup(
             labelText = "How hungry?",
-            radioOptions = listOf("Light", "Medium", "Very hungry"),
-            selectedOption = hungerLevel,
-            onSelected = { hungerLevel = it },
+            radioOptions = listOf("Light", "Hungry", "Medium", "Very hungry"),
+            selectedOption = viewModel.hungerLevel,
+            onSelected = { viewModel.hungerLevel = it },
             modifier = modifier
         )
         Text(
-            text = "Total pizzas: $totalPizzas",
+            text = "Total pizzas: ${viewModel.totalPizzas}",
             fontSize = 22.sp,
             modifier = modifier.padding(top = 16.dp, bottom = 16.dp)
         )
         Button(
-            onClick = {            totalPizzas = calculateNumPizzas(numPeopleInput.toInt(),
-                hungerLevel)
-
+            onClick = {
+                // Ensure numPeopleInput is converted to an Int safely
+                val numPeople = viewModel.numPeopleInput.toIntOrNull() ?: 0
+                viewModel.totalPizzas = calculateNumPizzas(numPeople, viewModel.hungerLevel)
             },
             modifier = modifier.fillMaxWidth()
         ) {
             Text("Calculate")
         }
-
     }
 }
 
@@ -84,7 +71,6 @@ fun NumberField(
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-
     TextField(
         value = textInput,
         onValueChange = onValueChange,
@@ -133,18 +119,21 @@ fun RadioGroup(
     }
 }
 
+class PizzaPartyViewModel : ViewModel() {
+    var totalPizzas by mutableStateOf(0)
+    var numPeopleInput by mutableStateOf("")
+    var hungerLevel by mutableStateOf("Medium")
+}
 
-fun calculateNumPizzas(
-    numPeople: Int,
-    hungerLevel: String
-): Int {
+fun calculateNumPizzas(numPeople: Int, hungerLevel: String): Int {
     val slicesPerPizza = 8
     val slicesPerPerson = when (hungerLevel) {
         "Light" -> 2
-        "Medium" -> 3
+        "Hungry" -> 3
+        "Medium" -> 4
+        "Very hungry" -> 5 // Ensure string matches the RadioGroup option
         else -> 5
     }
 
     return ceil(numPeople * slicesPerPerson / slicesPerPizza.toDouble()).toInt()
 }
-

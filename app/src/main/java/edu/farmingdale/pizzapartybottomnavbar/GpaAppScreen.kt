@@ -13,11 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 
-// ToDo 4: Match the UI as in drawable gpa_design.png. Use the following hints:
-// - The background color should be Color.Cyan
-// - Fix padding, alignment, and keypad type
 
-// ToDo 5:  Add the GpaAppScreen composable button that clears the input fields when clicked
 
 
 @Composable
